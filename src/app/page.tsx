@@ -30,6 +30,21 @@ export default function LandingPage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Handle hash navigation to algorithms section
+  useEffect(() => {
+    if (window.location.hash === '#algorithms-section') {
+      const algorithmsSection = document.getElementById('algorithms-section');
+      if (algorithmsSection) {
+        setTimeout(() => {
+          algorithmsSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100);
+      }
+    }
+  }, []);
+
   // Transform values for smooth animations
   const titleScale = useTransform(scrollYProgress, [0, 0.3], [1, 0.6]);
   const titleY = useTransform(scrollYProgress, [0, 0.3], [0, -100]);
@@ -52,6 +67,16 @@ export default function LandingPage() {
     router.push(`/visualizer?algorithm=${algorithmId}`);
   };
 
+  const scrollToAlgorithms = () => {
+    const algorithmsSection = document.getElementById('algorithms-section');
+    if (algorithmsSection) {
+      algorithmsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 ease-in-out">
       {/* Header */}
@@ -70,6 +95,17 @@ export default function LandingPage() {
               Algtrax
             </motion.div>
             <nav className="flex items-center gap-8">
+
+              <button 
+                onClick={scrollToAlgorithms}
+                className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white no-underline"
+              >
+                Algorithms
+              </button>
+
+              <a href="#" className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 no-underline"
+              >Q&A</a>
+
               <SignedOut>
                 <SignInButton mode="modal">
                   <button className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white no-underline">
@@ -85,12 +121,6 @@ export default function LandingPage() {
               <SignedIn>
                 <UserButton />
               </SignedIn>
-
-              <a href="#" className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 no-underline"
-              >Algorithms</a>
-
-              <a href="#" className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 no-underline"
-              >Q&A</a>
 
               <ThemeToggle />
             </nav>
@@ -128,7 +158,7 @@ export default function LandingPage() {
       </section>
 
       {/* Algorithms Section */}
-      <section className="min-h-screen bg-gray-50 dark:bg-gray-800 py-20 pt-32 transition-colors duration-300 ease-in-out">
+      <section id="algorithms-section" className="min-h-screen bg-gray-50 dark:bg-gray-800 py-20 pt-32 transition-colors duration-300 ease-in-out">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors duration-300 ease-in-out">

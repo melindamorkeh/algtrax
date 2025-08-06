@@ -5,7 +5,7 @@ import { Visualiser } from "../../components/visualiser/visualiser";
 import { Controls } from "../../components/controls/controls";
 import { GifExporter } from "../../components/gifExporter/gifExporter";
 import { useStore } from "../../store";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { getAlgorithmById } from "@/data/algorithms";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -22,6 +22,7 @@ import {
 function VisualizerContent() {
   const { code, states, runAlgorithm, setCode, generateStates } = useStore();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const algorithmId = searchParams.get("algorithm");
   const algorithm = algorithmId ? getAlgorithmById(algorithmId) : null;
   const prevAlgorithmId = useRef<string | null>(null);
@@ -37,6 +38,10 @@ function VisualizerContent() {
       prevAlgorithmId.current = algorithmId;
     }
   }, [algorithmId, setCode, generateStates]);
+
+  const navigateToAlgorithms = () => {
+    router.push('/#algorithms-section');
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors">
@@ -71,7 +76,12 @@ function VisualizerContent() {
               <SignedIn>
                 <UserButton />
               </SignedIn>
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Algorithms</a>
+              <button 
+                onClick={navigateToAlgorithms}
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+              >
+                Algorithms
+              </button>
               <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Q&A</a>
               <ThemeToggle />
             </nav>
