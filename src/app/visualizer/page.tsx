@@ -11,6 +11,13 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useEffect, useRef, useState, Suspense } from "react";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 function VisualizerContent() {
   const { code, states, runAlgorithm, setCode, generateStates } = useStore();
@@ -49,13 +56,24 @@ function VisualizerContent() {
               )}
             </div>
             <nav className="flex items-center space-x-8">
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Account</a>
+              <SignedOut>
+                <SignInButton mode="modal">
+                  <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
               <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Algorithms</a>
               <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Q&A</a>
               <ThemeToggle />
-              <button className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
-                Login
-              </button>
             </nav>
           </div>
         </div>

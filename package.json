@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^6.29.0",
     "@monaco-editor/react": "^4.7.0",
     "classnames": "^2.5.1",
     "framer-motion": "^12.16.0",
