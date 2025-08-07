@@ -4,6 +4,21 @@ import { useState, useRef, useEffect } from 'react';
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 
+/**
+ * Code Editor Component
+ * 
+ * This component provides a full-featured code editor for algorithm implementation.
+ * It includes:
+ * - Monaco Editor integration for syntax highlighting and code completion
+ * - Multiple language support (JavaScript, Python, Java)
+ * - Algorithm-specific code templates and model solutions
+ * - Code validation and feedback system
+ * - Integration with the visualization system
+ * 
+ * The editor automatically loads appropriate starter templates and model code
+ * based on the selected algorithm and programming language.
+ */
+
 const MonacoEditor = dynamic(() => import("@monaco-editor/react"), {
     ssr: false,
 });
@@ -795,7 +810,7 @@ const starterTemplates = {
 
         python: `def insertion_sort(arr):
     # TODO: Implement insertion sort algorithm
-    # Hint: Use a key element and shift elements to make space
+    // Hint: Use a key element and shift elements to make space
     
     pass`,
 
@@ -1052,7 +1067,7 @@ class HashTable {
 
         python: `def linear_search(arr, target):
     # TODO: Implement linear search algorithm
-    # Hint: Iterate through array and compare each element
+    // Hint: Iterate through array and compare each element
     
     pass`,
 

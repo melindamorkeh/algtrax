@@ -24,7 +24,7 @@ interface GraphRendererProps {
   height?: number;
 }
 
-export function GraphRenderer({ nodes, edges, width = 600, height = 400 }: GraphRendererProps) {
+export function GraphRenderer({ nodes, edges, width = 1000, height = 400 }: GraphRendererProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {

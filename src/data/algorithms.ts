@@ -1,18 +1,43 @@
+/**
+ * Algorithm Data Structure and Configuration
+ * 
+ * This file contains all the algorithm definitions used throughout the application.
+ * Each algorithm has metadata that determines how it's displayed, what features
+ * are available, and how it's categorized for the user interface.
+ */
+
+/**
+ * Algorithm Interface
+ * 
+ * Defines the structure for algorithm metadata that's displayed to users
+ * and used by the visualization system to determine rendering behavior.
+ */
 export interface Algorithm {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-  hasCode: boolean;
-  hasQuiz: boolean;
-  description: string;
+  id: string;                    // Unique identifier used in URLs and routing
+  name: string;                  // Display name shown to users
+  category: string;              // Category for grouping algorithms (Sorting, Searching, etc.)
+  image: string;                 // Path to algorithm image (currently unused)
+  hasCode: boolean;              // Whether code editor functionality is available
+  hasQuiz: boolean;              // Whether quiz functionality is available (future feature)
+  description: string;           // User-friendly description of the algorithm
   complexity: {
-    time: string;
-    space: string;
+    time: string;                // Time complexity notation (e.g., "O(n²)")
+    space: string;               // Space complexity notation (e.g., "O(1)")
   };
 }
 
+/**
+ * Algorithm Database
+ * 
+ * Contains all available algorithms organized by category.
+ * Each algorithm entry determines:
+ * - How it appears in the landing page algorithm cards
+ * - What visualization type is used (bars, graph, hash table)
+ * - What code templates are available in the editor
+ * - What complexity information is displayed
+ */
 export const algorithms: Algorithm[] = [
+  // Sorting Algorithms
   {
     id: "bubble-sort",
     name: "Bubble Sort",
@@ -65,6 +90,8 @@ export const algorithms: Algorithm[] = [
       space: "O(log n)"
     }
   },
+  
+  // Searching Algorithms
   {
     id: "binary-search",
     name: "Binary Search",
@@ -104,6 +131,8 @@ export const algorithms: Algorithm[] = [
       space: "O(1)"
     }
   },
+  
+  // Graph Traversal Algorithms
   {
     id: "breadth-first-search",
     name: "Breadth First Search",
@@ -143,6 +172,8 @@ export const algorithms: Algorithm[] = [
       space: "O(V)"
     }
   },
+  
+  // Path Finding Algorithms
   {
     id: "dijkstra",
     name: "Dijkstra",
@@ -171,12 +202,32 @@ export const algorithms: Algorithm[] = [
   }
 ];
 
+/**
+ * Algorithm Categories
+ * 
+ * Used to group algorithms on the landing page and determine
+ * the order in which categories are displayed.
+ */
 export const categories = ["Sorting", "Searching", "Graph Traversal", "Path Finding"];
 
+/**
+ * Utility Functions
+ * 
+ * Helper functions for finding and filtering algorithms
+ */
+
+/**
+ * Find an algorithm by its unique identifier
+ * Used for URL routing and algorithm selection
+ */
 export const getAlgorithmById = (id: string): Algorithm | undefined => {
   return algorithms.find(algo => algo.id === id);
 };
 
+/**
+ * Get all algorithms in a specific category
+ * Used for filtering and displaying algorithms by category
+ */
 export const getAlgorithmsByCategory = (category: string): Algorithm[] => {
   return algorithms.filter(algo => algo.category === category);
 }; 

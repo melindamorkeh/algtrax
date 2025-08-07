@@ -7,44 +7,87 @@ import { AlgorithmService } from '@/utils/algorithmService';
 import { GraphRenderer } from './GraphRenderer';
 import { HashTableRenderer } from './HashTableRenderer';
 
+/**
+ * Visualizer Component Props
+ * 
+ * Defines the interface for the visualizer component that displays
+ * algorithm animations and provides playback controls.
+ */
 interface VisualiserProps {
-    states: any[];
-    algorithmId?: string;
+    states: any[];           // Array of visualization states from the algorithm
+    algorithmId?: string;    // Current algorithm identifier
 }
 
+/**
+ * Bar Data Interface
+ * 
+ * Represents individual bars in bar chart visualizations
+ * (used for sorting and array-based algorithms).
+ */
 interface BarData {
-    value: number;
-    index: number;
-    status: 'normal' | 'comparing' | 'swapping' | 'sorted' | 'pivot' | 'searching' | 'found';
+    value: number;           // Numeric value of the bar
+    index: number;           // Position in the array
+    status: 'normal' | 'comparing' | 'swapping' | 'sorted' | 'pivot' | 'searching' | 'found';  // Visual state
 }
 
+/**
+ * Node Interface
+ * 
+ * Represents vertices in graph visualizations
+ * (used for graph traversal and pathfinding algorithms).
+ */
 interface Node {
-    id: string;
-    x: number;
-    y: number;
-    value?: number;
-    status: 'unvisited' | 'visited' | 'current' | 'path' | 'start' | 'end';
+    id: string;              // Unique node identifier
+    x: number;               // X coordinate for positioning
+    y: number;               // Y coordinate for positioning
+    value?: number;          // Optional numeric value
+    status: 'unvisited' | 'visited' | 'current' | 'path' | 'start' | 'end';  // Visual state
 }
 
+/**
+ * Edge Interface
+ * 
+ * Represents connections between nodes in graph visualizations.
+ */
 interface Edge {
-    from: string;
-    to: string;
-    weight?: number;
-    status: 'normal' | 'visited' | 'path' | 'current';
+    from: string;            // Source node ID
+    to: string;              // Target node ID
+    weight?: number;         // Optional edge weight
+    status: 'normal' | 'visited' | 'path' | 'current';  // Visual state
 }
 
+/**
+ * Graph Data Interface
+ * 
+ * Complete graph structure for graph-based algorithm visualizations.
+ */
 interface GraphData {
-    nodes: Node[];
-    edges: Edge[];
-    directed: boolean;
-    weighted: boolean;
+    nodes: Node[];           // Array of graph nodes
+    edges: Edge[];           // Array of graph edges
+    directed: boolean;       // Whether the graph is directed
+    weighted: boolean;       // Whether edges have weights
 }
 
+/**
+ * Algorithm Visualizer Component
+ * 
+ * This is the main visualization component that displays algorithm animations.
+ * It supports three types of visualizations:
+ * - Bar charts for sorting and array-based algorithms
+ * - Graph visualizations for graph traversal algorithms
+ * - Hash table visualizations for hash table operations
+ * 
+ * The component provides playback controls and automatically determines
+ * the appropriate visualization type based on the algorithm category.
+ */
 export function Visualiser({ states, algorithmId }: VisualiserProps) {
-    const [currentState, setCurrentState] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [speed, setSpeed] = useState(1000);
-    const [visualizationType, setVisualizationType] = useState<'bars' | 'graph' | 'hash'>('bars');
+    // Animation state management
+    const [currentState, setCurrentState] = useState(0);        // Current animation frame
+    const [isPlaying, setIsPlaying] = useState(false);          // Play/pause state
+    const [speed, setSpeed] = useState(1000);                   // Animation speed in milliseconds
+    const [visualizationType, setVisualizationType] = useState<'bars' | 'graph' | 'hash'>('bars');  // Visualization type
+    
+    // Data state for different visualization types
     const [graphData, setGraphData] = useState<GraphData>({
         nodes: [],
         edges: [],
@@ -52,11 +95,20 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         weighted: false
     });
     const [barData, setBarData] = useState<BarData[]>([]);
+    
+    // Animation interval reference for cleanup
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+    // Get algorithm metadata for display purposes
     const algorithm = algorithmId ? getAlgorithmById(algorithmId) : null;
 
-    // Determine visualization type based on algorithm category
+    /**
+     * Determine Visualization Type
+     * 
+     * Automatically selects the appropriate visualization type based on
+     * the algorithm category. This ensures the correct visual representation
+     * is used for each algorithm type.
+     */
     useEffect(() => {
         if (algorithm) {
             if (algorithm.category === 'Sorting') {
@@ -73,6 +125,12 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         }
     }, [algorithm]);
 
+    /**
+     * Initialize Bar Chart Data
+     * 
+     * Sets up the initial bar chart data for sorting and array-based algorithms.
+     * This creates the visual representation of the array as bars.
+     */
     const initializeBarData = () => {
         const initialValues = [64, 34, 25, 12, 22, 11, 90, 45, 78, 33];
         const bars: BarData[] = initialValues.map((value, index) => ({
@@ -83,8 +141,14 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         setBarData(bars);
     };
 
+    /**
+     * Initialize Graph Data
+     * 
+     * Sets up the initial graph structure for graph-based algorithms.
+     * This creates the visual representation of nodes and edges.
+     */
     const initializeGraphData = () => {
-        // Create a sample graph
+        // Create a sample graph with nodes and edges
         const nodes: Node[] = [
             { id: 'A', x: 100, y: 100, status: 'unvisited' },
             { id: 'B', x: 200, y: 150, status: 'unvisited' },
@@ -107,13 +171,18 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         setGraphData({ nodes, edges, directed: false, weighted: true });
     };
 
-    // Animation control
+    /**
+     * Animation Control Effect
+     * 
+     * Manages the automatic playback of the algorithm animation.
+     * Advances through states at the specified speed when playing.
+     */
     useEffect(() => {
         if (isPlaying && states.length > 0) {
             intervalRef.current = setInterval(() => {
                 setCurrentState(prev => {
                     if (prev >= states.length - 1) {
-                        setIsPlaying(false);
+                        setIsPlaying(false); // Stop when animation completes
                         return prev;
                     }
                     return prev + 1;
@@ -123,6 +192,7 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
             clearInterval(intervalRef.current);
         }
 
+        // Cleanup interval on unmount or dependency change
         return () => {
             if (intervalRef.current) {
                 clearInterval(intervalRef.current);
@@ -130,8 +200,11 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         };
     }, [isPlaying, states.length, speed]);
 
-    // No longer needed since we're using GraphRenderer component
-
+    /**
+     * Play Animation
+     * 
+     * Starts the automatic playback of the algorithm animation.
+     */
     const playAnimation = () => {
         if (states.length > 0) {
             setIsPlaying(true);
@@ -139,30 +212,55 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         }
     };
 
+    /**
+     * Pause Animation
+     * 
+     * Stops the automatic playback while maintaining current position.
+     */
     const pauseAnimation = () => {
         setIsPlaying(false);
     };
 
+    /**
+     * Reset Animation
+     * 
+     * Returns the animation to the beginning and stops playback.
+     */
     const resetAnimation = () => {
         setIsPlaying(false);
         setCurrentState(0);
     };
 
+    /**
+     * Next Step
+     * 
+     * Manually advances to the next frame of the animation.
+     */
     const nextStep = () => {
         if (currentState < states.length - 1) {
             setCurrentState(prev => prev + 1);
         }
     };
 
+    /**
+     * Previous Step
+     * 
+     * Manually returns to the previous frame of the animation.
+     */
     const prevStep = () => {
         if (currentState > 0) {
             setCurrentState(prev => prev - 1);
         }
     };
 
-    // Render bar visualization
+    /**
+     * Render Bar Chart Visualization
+     * 
+     * Creates the bar chart visualization for sorting and array-based algorithms.
+     * Each bar represents an array element, and colors indicate the current operation.
+     */
     const renderBars = () => {
-        // Get current state data
+        // Get current state data from the algorithm
         const currentStateData = states[currentState];
         if (!currentStateData) {
             return (
@@ -172,6 +270,7 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
             );
         }
 
+        // Extract visualization data from current state
         const values = currentStateData.values || barData.map(bar => bar.value);
         const comparing = currentStateData.comparing || [];
         const swapping = currentStateData.swapping || [];
@@ -186,13 +285,16 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         const found = currentStateData.found || [];
         const target = currentStateData.target;
 
+        // Calculate visualization dimensions
         const maxValue = Math.max(...values);
         const containerHeight = 300;
 
         return (
             <div className="w-full h-full flex flex-col">
+                {/* Bar Chart Display */}
                 <div className="flex-1 flex items-end justify-center space-x-2 p-4">
                     {values.map((value: number, index: number) => {
+                        // Determine bar color based on current operation
                         let status = 'normal';
                         if (comparing.includes(index)) status = 'comparing';
                         else if (swapping.includes(index)) status = 'swapping';
@@ -239,6 +341,8 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                         );
                     })}
                 </div>
+                
+                {/* Progress Information */}
                 <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
                     {currentState < states.length ? `Step ${currentState + 1} of ${states.length}` : 'Animation complete'}
                     {target !== undefined && (
@@ -247,6 +351,8 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                         </div>
                     )}
                 </div>
+                
+                {/* Legend for Algorithm-Specific Colors */}
                 {(merging || pivot.length > 0 || searching.length > 0) && (
                     <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
                         {merging && (
@@ -289,7 +395,12 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         );
     };
 
-    // Render graph visualization
+    /**
+     * Render Graph Visualization
+     * 
+     * Creates the graph visualization for graph-based algorithms.
+     * Uses the GraphRenderer component to display nodes and edges.
+     */
     const renderGraph = () => {
         const currentStateData = states[currentState];
         if (!currentStateData) {
@@ -314,7 +425,12 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
         );
     };
 
-    // Render hash table visualization
+    /**
+     * Render Hash Table Visualization
+     * 
+     * Creates the hash table visualization for hash table operations.
+     * Uses the HashTableRenderer component to display buckets and chains.
+     */
     const renderHashTable = () => {
         const currentStateData = states[currentState];
         if (!currentStateData) {
@@ -355,7 +471,7 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
 
     return (
         <div className="w-full h-full flex flex-col">
-            {/* Controls */}
+            {/* Playback Controls */}
             <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <div className="flex items-center space-x-4">
                     <button
@@ -386,6 +502,7 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                     </button>
                 </div>
                 
+                {/* Speed Control */}
                 <div className="flex items-center space-x-2">
                     <label className="text-sm text-gray-700 dark:text-gray-300">Speed:</label>
                     <input
@@ -401,14 +518,14 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                 </div>
             </div>
 
-            {/* Visualization */}
+            {/* Visualization Display */}
             <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg p-4">
                 {visualizationType === 'bars' ? renderBars() : 
                  visualizationType === 'graph' ? renderGraph() : 
                  renderHashTable()}
             </div>
 
-            {/* Algorithm Info */}
+            {/* Algorithm Information */}
             {algorithm && (
                 <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <h3 className="font-medium text-gray-900 dark:text-white mb-2">

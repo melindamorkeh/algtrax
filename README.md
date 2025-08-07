@@ -1,102 +1,242 @@
-# Algorithm Visualizer
+# Algtrax - Interactive Algorithm Learning Platform
 
-A comprehensive web application for learning and visualizing algorithms with interactive animations.
+Algtrax is a comprehensive web application for learning algorithms through interactive visualizations and code practice. Users can explore various algorithms, write code implementations, and watch real-time visualizations of how algorithms work.
 
-## Features
+## 🚀 Features
 
-### Algorithm Visualization
-- **Sorting Algorithms**: Visualize sorting algorithms with animated bar charts
-  - Bubble Sort
-  - Insertion Sort
-  - Merge Sort (coming soon)
-- **Searching Algorithms**: Watch search algorithms in action
-  - Binary Search
-  - Linear Search
-- **Graph Traversal**: Interactive graph visualizations
-  - Breadth-First Search (BFS)
-  - Depth-First Search (DFS)
-- **Pathfinding**: Find shortest paths with visual feedback
-  - Dijkstra's Algorithm
-  - A* Algorithm (coming soon)
+### Core Functionality
+- **Interactive Algorithm Visualizations**: Real-time animations showing how algorithms work step-by-step
+- **Code Editor**: Write and test algorithm implementations in multiple languages (JavaScript, Python, Java)
+- **Multiple Algorithm Categories**: Sorting, Searching, Graph Traversal, and Path Finding algorithms
+- **Dark/Light Theme**: Toggle between themes for comfortable viewing
+- **User Authentication**: Sign up and manage your learning progress
+- **GIF Export**: Export algorithm visualizations as animated GIFs for sharing
 
-### Interactive Features
-- **Step-by-step Animation**: Control the visualization speed and step through algorithms
-- **Real-time Visualization**: Watch algorithms execute in real-time
-- **Multiple Views**: Switch between code editor and visualization modes
-- **Dark Mode Support**: Toggle between light and dark themes
+### Algorithm Categories
+- **Sorting**: Bubble Sort, Insertion Sort, Merge Sort, Quick Sort
+- **Searching**: Linear Search, Binary Search, Hash Table Search
+- **Graph Traversal**: Breadth-First Search, Depth-First Search
+- **Path Finding**: Dijkstra's Algorithm, A* Algorithm
 
-### Code Editor
-- **Multi-language Support**: JavaScript, Python, and Java
-- **Syntax Highlighting**: Monaco Editor integration
-- **Algorithm Templates**: Pre-built starter templates for each algorithm
-- **Code Analysis**: Get feedback on your implementations
+## 🏗️ Project Structure
 
-## Getting Started
+### Frontend Architecture
 
-1. **Install Dependencies**
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── page.tsx           # Landing page with algorithm showcase
+│   ├── visualizer/        # Algorithm visualization page
+│   └── layout.tsx         # Root layout with providers
+├── components/            # Reusable UI components
+│   ├── visualiser/       # Visualization components
+│   ├── codeEditor/       # Code editor with syntax highlighting
+│   ├── controls/         # Playback and execution controls
+│   └── gifExporter/      # GIF export functionality
+├── algorithms/           # Algorithm implementations
+│   ├── bubble-sort.ts   # Sorting algorithm with visualization states
+│   ├── bfs.ts           # Graph traversal algorithm
+│   └── ...              # Other algorithm implementations
+├── data/                # Static data and configurations
+│   └── algorithms.ts    # Algorithm metadata and categories
+├── store.ts             # Global state management (Zustand)
+├── utils/               # Utility functions and services
+│   └── algorithmService.ts  # Algorithm state generation service
+└── styles/              # Global styles and theme configuration
+```
+
+### Key Components
+
+#### Landing Page (`src/app/page.tsx`)
+- **Purpose**: Main entry point showcasing available algorithms
+- **Features**: 
+  - Animated hero section with parallax effects
+  - Algorithm cards organized by category
+  - User authentication integration
+  - Smooth scroll navigation
+- **User Experience**: Users can browse algorithms, view complexity information, and click to start learning
+
+#### Visualizer Page (`src/app/visualizer/page.tsx`)
+- **Purpose**: Main learning interface for algorithm exploration
+- **Features**:
+  - Split view: Code editor + visualization side-by-side
+  - Full-screen visualization mode
+  - Algorithm information and complexity display
+  - Mode toggle between code and visualization
+- **User Experience**: Users can write code, run algorithms, and watch real-time visualizations
+
+#### Code Editor (`src/components/codeEditor/codeEditor.tsx`)
+- **Purpose**: Interactive code writing and testing
+- **Features**:
+  - Monaco Editor integration with syntax highlighting
+  - Multiple language support (JavaScript, Python, Java)
+  - Algorithm-specific starter templates
+  - Model solutions for reference
+  - Code validation and feedback
+- **User Experience**: Users can write, test, and compare their implementations
+
+#### Visualizer (`src/components/visualiser/visualiser.tsx`)
+- **Purpose**: Display algorithm animations and provide playback controls
+- **Features**:
+  - Three visualization types: bar charts, graphs, hash tables
+  - Playback controls (play, pause, step forward/backward)
+  - Speed adjustment
+  - Progress tracking
+- **User Experience**: Users can watch algorithm execution at their own pace
+
+#### Algorithm Service (`src/utils/algorithmService.ts`)
+- **Purpose**: Bridge between algorithm implementations and visualization system
+- **Features**:
+  - Generates visualization states for different algorithm types
+  - Provides default test data
+  - Routes algorithms to appropriate visualization components
+- **Backend Integration**: Coordinates with algorithm implementations to create animation frames
+
+### State Management
+
+#### Global Store (`src/store.ts`)
+- **Purpose**: Centralized state management using Zustand
+- **State**:
+  - `code`: Current editor content
+  - `states`: Visualization animation frames
+  - `currentAlgorithm`: Selected algorithm ID
+- **Actions**:
+  - `runAlgorithm()`: Execute user code
+  - `generateStates()`: Create visualization frames
+  - `setCode()`: Update editor content
+
+### Algorithm Implementation Pattern
+
+Each algorithm follows a consistent pattern for generating visualization states:
+
+```typescript
+// Example: Bubble Sort implementation
+export function bubbleSort(arr: number[]): BarState[] {
+  const states: BarState[] = [];
+  
+  // Add initial state
+  states.push({
+    values: [...array],
+    comparing: [],
+    swapping: [],
+    sorted: []
+  });
+  
+  // Algorithm logic with state generation at each step
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      // State: Show comparison
+      states.push({
+        values: [...array],
+        comparing: [j, j + 1],
+        swapping: [],
+        sorted: [...]
+      });
+      
+      if (array[j] > array[j + 1]) {
+        // State: Show swapping
+        states.push({...});
+        // Perform swap
+        [array[j], array[j + 1]] = [array[j + 1], array[j]];
+        // State: Show result
+        states.push({...});
+      }
+    }
+  }
+  
+  return states;
+}
+```
+
+## 🎨 Visualization Types
+
+### Bar Chart Visualizations
+- **Used for**: Sorting and array-based algorithms
+- **Features**: 
+  - Each bar represents an array element
+  - Colors indicate current operation (comparing, swapping, sorted)
+  - Animated transitions between states
+  - Progress tracking and legends
+
+### Graph Visualizations
+- **Used for**: Graph traversal and pathfinding algorithms
+- **Features**:
+  - Nodes and edges with visual states
+  - Path highlighting and node status tracking
+  - Queue and visited node visualization
+  - Weight display for weighted algorithms
+
+### Hash Table Visualizations
+- **Used for**: Hash table operations
+- **Features**:
+  - Bucket and chain visualization
+  - Hash function demonstration
+  - Collision resolution visualization
+  - Search path highlighting
+
+## 🔧 Technical Stack
+
+- **Framework**: Next.js 14 with App Router
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS with dark/light theme support
+- **State Management**: Zustand for lightweight global state
+- **Code Editor**: Monaco Editor with syntax highlighting
+- **Authentication**: Clerk for user management
+- **Animations**: Framer Motion for smooth transitions
+- **Visualizations**: Custom SVG-based components
+
+## 🚀 Getting Started
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/algtrax.git
+   cd algtrax
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-2. **Run Development Server**
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   # Add your Clerk authentication keys
+   ```
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
 
-3. **Open in Browser**
+5. **Open your browser**
    Navigate to `http://localhost:3000`
 
-## Usage
+## 📚 Learning Flow
 
-### Viewing Algorithm Visualizations
-1. Navigate to the visualizer page
-2. Select an algorithm from the dropdown
-3. Click the "Visualization" tab
-4. Use the controls to play, pause, or step through the animation
+1. **Browse Algorithms**: Start on the landing page to explore available algorithms
+2. **Select Algorithm**: Click on an algorithm card to open the visualizer
+3. **Watch Visualization**: Use playback controls to understand how the algorithm works
+4. **Write Code**: Switch to code editor mode to implement the algorithm
+5. **Test Implementation**: Run your code and compare with the visualization
+6. **Export Results**: Save visualizations as GIFs for sharing or reference
 
-### Writing Code
-1. Select an algorithm
-2. Choose your preferred programming language
-3. Write your implementation in the code editor
-4. Submit your code for analysis
+## 🎯 Educational Value
 
-### Visualization Controls
-- **Play/Pause**: Start or stop the animation
-- **Previous/Next**: Step through the algorithm manually
-- **Reset**: Return to the beginning
-- **Speed Slider**: Adjust animation speed
+Algtrax provides a comprehensive learning experience by combining:
+- **Visual Learning**: Step-by-step algorithm animations
+- **Hands-on Practice**: Interactive code editor with multiple languages
+- **Immediate Feedback**: Real-time visualization of code execution
+- **Progressive Learning**: From simple sorting to complex graph algorithms
 
-## Algorithm Categories
+## 🤝 Contributing
 
-### Sorting Algorithms
-Visualize how different sorting algorithms work by watching bars move and change colors:
-- **Yellow**: Elements being compared
-- **Red**: Elements being swapped
-- **Green**: Sorted elements
+We welcome contributions! Please see our contributing guidelines for details on:
+- Code style and standards
+- Adding new algorithms
+- Improving visualizations
+- Bug reports and feature requests
 
-### Graph Algorithms
-Watch graph traversal and pathfinding algorithms:
-- **Green**: Start node
-- **Red**: End node
-- **Blue**: Current node being processed
-- **Purple**: Visited nodes
-- **Yellow**: Path nodes
+## 📄 License
 
-## Technology Stack
-
-- **Frontend**: Next.js 14, React 18, TypeScript
-- **Styling**: Tailwind CSS
-- **Animations**: Framer Motion
-- **Code Editor**: Monaco Editor
-- **State Management**: Zustand
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
