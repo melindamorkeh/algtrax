@@ -36,16 +36,30 @@ export const useStore = create<Store>((set, get) => ({
      * Run Algorithm Function
      * 
      * Executes the user's code and generates visualization states.
-     * Currently a placeholder - would integrate with a code execution engine.
+     * For now, this generates demo states based on the current algorithm.
+     * In a full implementation, this would execute the user's actual code.
      */
     runAlgorithm: (code) => {
-        // TODO: Implement algorithm running logic
-        // This would:
-        // 1. Parse and validate the user's code
-        // 2. Execute it with sample data
-        // 3. Generate visualization states from the execution
-        // 4. Update the states array for the visualizer
-        set({ states: [] });
+        const { currentAlgorithm } = get();
+        
+        if (!currentAlgorithm) return;
+        
+        let states: any[] = [];
+        
+        // Generate visualization states based on the current algorithm
+        // This simulates running the algorithm with the user's code
+        if (['bubble-sort', 'insertion-sort', 'merge-sort', 'quick-sort', 'linear-search', 'hash-table-search'].includes(currentAlgorithm)) {
+          // Sorting and array-based algorithms use bar chart visualization
+          const defaultData = AlgorithmService.getDefaultSortingData();
+          states = AlgorithmService.generateSortingStates(currentAlgorithm, defaultData);
+        } else if (['breadth-first-search', 'depth-first-search', 'dijkstra', 'a-star'].includes(currentAlgorithm)) {
+            // Graph algorithms use node/edge visualization
+            const { nodes, edges } = AlgorithmService.getDefaultGraphData();
+            states = AlgorithmService.generateGraphStates(currentAlgorithm, nodes, edges, 'A', 'F');
+        }
+        
+        // Update the states with the generated visualization
+        set({ states });
     },
     
     /**

@@ -13,6 +13,12 @@
  */
 
 import { useStore } from '../../store';
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 
 interface ControlsProps {
     onRun: () => void;
@@ -22,12 +28,21 @@ export function Controls({ onRun }: ControlsProps) {
     return (
         <div className="flex items-center space-x-4">
             {/* Run Button - Executes the user's code and generates visualizations */}
-            <button
-                onClick={onRun}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-                Run Algorithm
-            </button>
+            <SignedIn>
+                <button
+                    onClick={onRun}
+                    className="btn-base btn-success text-xs sm:text-sm whitespace-nowrap overflow-hidden"
+                >
+                    <span className="block truncate">Run Algorithm</span>
+                </button>
+            </SignedIn>
+            <SignedOut>
+                <SignInButton mode="modal">
+                    <button className="btn-base btn-success text-xs sm:text-sm whitespace-nowrap overflow-hidden">
+                        <span className="block truncate">Run Algorithm</span>
+                    </button>
+                </SignInButton>
+            </SignedOut>
         </div>
     );
 } 

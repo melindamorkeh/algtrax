@@ -133,12 +133,12 @@ export default function LandingPage() {
               {/* Shows different content based on whether user is signed in or not */}
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="transition-colors duration-300 ease-in-out text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white no-underline">
+                  <button className="btn-base btn-secondary">
                     Sign In
                   </button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                  <button className="btn-base btn-primary">
                     Sign Up
                   </button>
                 </SignUpButton>

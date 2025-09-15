@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from 'react';
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
 
 /**
  * Code Editor Component
@@ -1432,9 +1438,10 @@ export function CodeEditor({ code, onChange, algorithmId }: CodeEditorProps) {
 
     return (
         <div className="h-full flex flex-col">
-            {/* Language Selector */}
-            <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center space-x-4">
+            {/* Language Selector and Controls */}
+            <div className="mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                {/* Language Selector Row */}
+                <div className="flex items-center space-x-4 mb-4">
                     <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Language:
                     </label>
@@ -1451,26 +1458,36 @@ export function CodeEditor({ code, onChange, algorithmId }: CodeEditorProps) {
                     </select>
                 </div>
                 
-                <div className="flex items-center space-x-3">
+                {/* Action Buttons - Responsive Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
                     <button
                         onClick={handleViewModelCode}
-                        className="px-3 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors text-sm"
+                        className="btn-base btn-muted text-xs sm:text-sm whitespace-nowrap overflow-hidden"
                     >
-                        View Model Code
+                        <span className="block truncate">View Model Code</span>
                     </button>
                     <button
                         onClick={handleLoadStarterTemplate}
-                        className="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
+                        className="btn-base btn-success text-xs sm:text-sm whitespace-nowrap overflow-hidden"
                     >
-                        Load Starter Template
+                        <span className="block truncate">Load Starter Template</span>
                     </button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={isSubmitting}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        {isSubmitting ? 'Analyzing...' : 'Submit Code'}
-                    </button>
+                    <SignedIn>
+                        <button
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            className="btn-base btn-primary text-xs sm:text-sm whitespace-nowrap overflow-hidden"
+                        >
+                            <span className="block truncate">{isSubmitting ? 'Analyzing...' : 'Submit Code'}</span>
+                        </button>
+                    </SignedIn>
+                    <SignedOut>
+                        <SignInButton mode="modal">
+                            <button className="btn-base btn-primary text-xs sm:text-sm whitespace-nowrap overflow-hidden">
+                                <span className="block truncate">Submit Code</span>
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
                 </div>
             </div>
 

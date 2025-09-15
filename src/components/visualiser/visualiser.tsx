@@ -472,49 +472,76 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
     return (
         <div className="w-full h-full flex flex-col">
             {/* Playback Controls */}
-            <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <div className="flex items-center space-x-4">
-                    <button
-                        onClick={resetAnimation}
-                        className="px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors"
-                    >
-                        Reset
-                    </button>
-                    <button
-                        onClick={prevStep}
-                        disabled={currentState === 0}
-                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={isPlaying ? pauseAnimation : playAnimation}
-                        className="px-3 py-1 bg-green-500 text-white rounded hover:bg-green-600 transition-colors"
-                    >
-                        {isPlaying ? 'Pause' : 'Play'}
-                    </button>
-                    <button
-                        onClick={nextStep}
-                        disabled={currentState >= states.length - 1}
-                        className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        Next
-                    </button>
+            <div className="mb-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-colors">
+                {/* Main Controls */}
+                <div className="flex flex-wrap items-center justify-center sm:justify-between gap-4 mb-4">
+                    <div className="flex items-center space-x-2 sm:space-x-3">
+                        <button
+                            onClick={resetAnimation}
+                            className="btn-base btn-muted text-xs sm:text-sm"
+                            title="Reset to beginning"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <span className="hidden sm:inline">Reset</span>
+                        </button>
+                        <button
+                            onClick={prevStep}
+                            disabled={currentState === 0}
+                            className="btn-base btn-secondary text-xs sm:text-sm"
+                            title="Previous step"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            </svg>
+                            <span className="hidden sm:inline">Previous</span>
+                        </button>
+                        <button
+                            onClick={isPlaying ? pauseAnimation : playAnimation}
+                            className="btn-base btn-success px-2 sm:px-4 text-xs sm:text-sm"
+                            title={isPlaying ? 'Pause animation' : 'Play animation'}
+                        >
+                            {isPlaying ? (
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            ) : (
+                                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
+                            )}
+                            <span className="hidden sm:inline">{isPlaying ? 'Pause' : 'Play'}</span>
+                        </button>
+                        <button
+                            onClick={nextStep}
+                            disabled={currentState >= states.length - 1}
+                            className="btn-base btn-secondary text-xs sm:text-sm"
+                            title="Next step"
+                        >
+                            <span className="hidden sm:inline">Next</span>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
                 
-                {/* Speed Control */}
-                <div className="flex items-center space-x-2">
-                    <label className="text-sm text-gray-700 dark:text-gray-300">Speed:</label>
-                    <input
-                        type="range"
-                        min="100"
-                        max="2000"
-                        step="100"
-                        value={speed}
-                        onChange={(e) => setSpeed(Number(e.target.value))}
-                        className="w-24"
-                    />
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{speed}ms</span>
+                {/* Speed Control - Full Width on Small Screens */}
+                <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-2 sm:gap-3">
+                    <label className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Speed:</label>
+                    <div className="flex items-center space-x-2 sm:space-x-3 w-full sm:w-auto">
+                        <input
+                            type="range"
+                            min="100"
+                            max="2000"
+                            step="100"
+                            value={speed}
+                            onChange={(e) => setSpeed(Number(e.target.value))}
+                            className="flex-1 sm:w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider"
+                        />
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 min-w-[45px] whitespace-nowrap">{speed}ms</span>
+                    </div>
                 </div>
             </div>
 

@@ -76,16 +76,16 @@ function VisualizerContent() {
             </div>
             
             {/* Navigation Menu */}
-            <nav className="flex items-center space-x-8">
+            <nav className="flex items-center space-x-2 sm:space-x-4 lg:space-x-8">
               {/* User Authentication */}
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
+                  <button className="btn-base btn-secondary text-sm sm:text-base">
                     Sign In
                   </button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="bg-black dark:bg-white text-white dark:text-black px-4 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+                  <button className="btn-base btn-primary text-sm sm:text-base">
                     Sign Up
                   </button>
                 </SignUpButton>
@@ -97,11 +97,11 @@ function VisualizerContent() {
               {/* Navigation Links */}
               <button 
                 onClick={navigateToAlgorithms}
-                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+                className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors text-sm sm:text-base hidden sm:block"
               >
                 Algorithms
               </button>
-              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">Q&A</a>
+              <a href="#" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors text-sm sm:text-base hidden lg:block">Q&A</a>
               
               {/* Theme Toggle */}
               <ThemeToggle />
@@ -119,17 +119,17 @@ function VisualizerContent() {
           className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 transition-colors"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               {/* Algorithm Details */}
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
                   {algorithm.name}
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-2xl">
+                <p className="text-gray-600 dark:text-gray-400 mb-4 max-w-2xl text-sm sm:text-base">
                   {algorithm.description}
                 </p>
                 {/* Complexity Information */}
-                <div className="flex space-x-6 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-2 sm:space-y-0 text-sm text-gray-500 dark:text-gray-400">
                   <div>
                     <span className="font-medium">Time Complexity:</span> {algorithm.complexity.time}
                   </div>
@@ -141,26 +141,34 @@ function VisualizerContent() {
               
               {/* Mode Toggle Buttons */}
               {/* Allow users to switch between code editor mode and full-screen visualization */}
-              <div className="flex space-x-4">
+              <div className="flex space-x-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                 <button 
                   onClick={() => setActiveTab('code')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`btn-base px-3 sm:px-4 py-2 relative text-sm sm:text-base ${
                     activeTab === 'code' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      ? 'btn-primary shadow-sm' 
+                      : 'btn-secondary border-none hover:bg-gray-200 dark:hover:bg-gray-700'
                   }`}
                 >
-                  Code Editor
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                  </svg>
+                  <span className="hidden sm:inline">Code Editor</span>
+                  <span className="sm:hidden">Code</span>
                 </button>
                 <button 
                   onClick={() => setActiveTab('visualization')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`btn-base px-3 sm:px-4 py-2 relative text-sm sm:text-base ${
                     activeTab === 'visualization' 
-                      ? 'bg-blue-600 text-white' 
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      ? 'btn-primary shadow-sm' 
+                      : 'btn-secondary border-none hover:bg-gray-200 dark:hover:bg-gray-700'
                   }`}
                 >
-                  Visualization
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <span className="hidden sm:inline">Visualization</span>
+                  <span className="sm:hidden">Viz</span>
                 </button>
               </div>
             </div>
@@ -170,19 +178,19 @@ function VisualizerContent() {
 
       {/* Main Content Area */}
       {/* Contains either split view (code + visualization) or full-screen visualization */}
-      <div className="flex h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-200px)]">
         {activeTab === 'code' ? (
           // Split View Mode - Code Editor and Visualization Side by Side
           <>
             {/* Left Panel - Code Editor */}
-            <div className="w-1/2 p-6">
+            <div className="w-full lg:w-1/2 p-3 lg:p-6">
               {/* Code Editor Container */}
               <div className="editor-container p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm h-full transition-colors">
                 <CodeEditor code={code} onChange={(c) => setCode(c)} algorithmId={algorithmId || undefined} />
               </div>
               
               {/* Control Panel - Run Button and GIF Export */}
-              <div className="controls-container mt-4 flex space-x-4">
+              <div className="controls-container mt-4 flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                   <Controls onRun={() => runAlgorithm(code)} />
                 </div>
@@ -193,7 +201,7 @@ function VisualizerContent() {
             </div>
             
             {/* Right Panel - Visualization */}
-            <div className="w-1/2 p-6">
+            <div className="w-full lg:w-1/2 p-3 lg:p-6">
               <div className="visualiser-container bg-white dark:bg-gray-800 rounded-lg shadow-sm h-full p-4 transition-colors">
                 <Visualiser states={states} algorithmId={algorithmId || undefined} />
               </div>
@@ -201,7 +209,7 @@ function VisualizerContent() {
           </>
         ) : (
           // Full-Screen Visualization Mode
-          <div className="w-full p-6">
+          <div className="w-full p-3 lg:p-6">
             <div className="visualiser-container bg-white dark:bg-gray-800 rounded-lg shadow-sm h-full p-4 transition-colors">
               <Visualiser states={states} algorithmId={algorithmId || undefined} />
             </div>
