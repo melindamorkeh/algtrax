@@ -195,7 +195,7 @@ function VisualizerContent() {
                   <Controls onRun={() => runAlgorithm(code)} />
                 </div>
                 <div className="flex-shrink-0">
-                  <GifExporter frames={states} />
+                  <GifExporter states={states} algorithmId={algorithmId || undefined} />
                 </div>
               </div>
             </div>

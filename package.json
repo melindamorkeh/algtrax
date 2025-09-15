@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.29.0",
+    "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@monaco-editor/react": "^4.7.0",
     "classnames": "^2.5.1",
     "framer-motion": "^12.16.0",
-    "gif.js": "^0.2.0",
     "gsap": "^3.13.0",
     "html2canvas": "^1.4.1",
     "lodash": "^4.17.21",

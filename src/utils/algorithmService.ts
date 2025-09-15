@@ -12,11 +12,14 @@ import { mergeSort } from '../algorithms/merge-sort';
 import { quickSort } from '../algorithms/quick-sort';
 import { linearSearch } from '../algorithms/linear-search';
 import { hashTableSearch } from '../algorithms/hash-table-search';
+import { binarySearch } from '../algorithms/binary-search';
 
 import { breadthFirstSearch } from '../algorithms/bfs';
 import { depthFirstSearch } from '../algorithms/dfs';
+import { tricolorAlgorithm } from '../algorithms/tricolor-algorithm';
 
 import { dijkstra } from '../algorithms/dijkstra';
+import { aStar } from '../algorithms/a-star';
 
 /**
  * Algorithm State Interface
@@ -63,6 +66,11 @@ export class AlgorithmService {
         // For search algorithms, use middle element as target
         const target = values[Math.floor(values.length / 2)];
         return linearSearch(values, target);
+      case 'binary-search':
+        // Binary search requires sorted array
+        const sortedValues = [...values].sort((a, b) => a - b);
+        const binaryTarget = sortedValues[Math.floor(sortedValues.length / 2)];
+        return binarySearch(sortedValues, binaryTarget);
       case 'hash-table-search':
         // Hash table uses string keys and numeric values
         const keys = ['apple', 'banana', 'cherry', 'date', 'elderberry', 'fig', 'grape'];
@@ -93,8 +101,12 @@ export class AlgorithmService {
         return breadthFirstSearch(nodes, edges, startNode, endNode);
       case 'depth-first-search':
         return depthFirstSearch(nodes, edges, startNode, endNode);
+      case 'tricolor-algorithm':
+        return tricolorAlgorithm(nodes, edges, startNode, endNode);
       case 'dijkstra':
         return dijkstra(nodes, edges, startNode, endNode);
+      case 'a-star':
+        return aStar(nodes, edges, startNode, endNode || 'F');
       default:
         return [];
     }
@@ -123,25 +135,38 @@ export class AlgorithmService {
    * @returns Object containing nodes and edges for the demonstration graph
    */
   static getDefaultGraphData(): { nodes: any[], edges: any[] } {
-    // Define nodes with positions for visualization
+    // Define nodes with positions for visualization - larger graph for better space utilization
     const nodes = [
-      { id: 'A', x: 100, y: 100, status: 'unvisited' },
-      { id: 'B', x: 200, y: 150, status: 'unvisited' },
-      { id: 'C', x: 300, y: 100, status: 'unvisited' },
-      { id: 'D', x: 150, y: 200, status: 'unvisited' },
-      { id: 'E', x: 250, y: 200, status: 'unvisited' },
-      { id: 'F', x: 350, y: 150, status: 'unvisited' },
+      { id: 'A', x: 50, y: 50, status: 'unvisited' },
+      { id: 'B', x: 150, y: 50, status: 'unvisited' },
+      { id: 'C', x: 250, y: 50, status: 'unvisited' },
+      { id: 'D', x: 350, y: 50, status: 'unvisited' },
+      { id: 'E', x: 100, y: 150, status: 'unvisited' },
+      { id: 'F', x: 200, y: 150, status: 'unvisited' },
+      { id: 'G', x: 300, y: 150, status: 'unvisited' },
+      { id: 'H', x: 50, y: 250, status: 'unvisited' },
+      { id: 'I', x: 150, y: 250, status: 'unvisited' },
+      { id: 'J', x: 250, y: 250, status: 'unvisited' },
+      { id: 'K', x: 350, y: 250, status: 'unvisited' },
     ];
 
-    // Define edges with weights for weighted algorithms
+    // Define edges with weights for weighted algorithms - more connections for interesting paths
     const edges = [
       { from: 'A', to: 'B', weight: 4, status: 'normal' },
-      { from: 'A', to: 'D', weight: 2, status: 'normal' },
+      { from: 'A', to: 'E', weight: 2, status: 'normal' },
       { from: 'B', to: 'C', weight: 3, status: 'normal' },
-      { from: 'B', to: 'E', weight: 5, status: 'normal' },
-      { from: 'C', to: 'F', weight: 1, status: 'normal' },
-      { from: 'D', to: 'E', weight: 6, status: 'normal' },
-      { from: 'E', to: 'F', weight: 2, status: 'normal' },
+      { from: 'B', to: 'F', weight: 5, status: 'normal' },
+      { from: 'C', to: 'D', weight: 1, status: 'normal' },
+      { from: 'C', to: 'G', weight: 2, status: 'normal' },
+      { from: 'D', to: 'G', weight: 3, status: 'normal' },
+      { from: 'E', to: 'F', weight: 6, status: 'normal' },
+      { from: 'E', to: 'H', weight: 4, status: 'normal' },
+      { from: 'F', to: 'G', weight: 2, status: 'normal' },
+      { from: 'F', to: 'I', weight: 3, status: 'normal' },
+      { from: 'G', to: 'J', weight: 5, status: 'normal' },
+      { from: 'H', to: 'I', weight: 2, status: 'normal' },
+      { from: 'I', to: 'J', weight: 4, status: 'normal' },
+      { from: 'J', to: 'K', weight: 1, status: 'normal' },
     ];
 
     return { nodes, edges };

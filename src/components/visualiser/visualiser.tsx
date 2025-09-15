@@ -6,6 +6,7 @@ import { getAlgorithmById } from '@/data/algorithms';
 import { AlgorithmService } from '@/utils/algorithmService';
 import { GraphRenderer } from './GraphRenderer';
 import { HashTableRenderer } from './HashTableRenderer';
+import { GifExporter } from '../gifExporter/gifExporter';
 
 /**
  * Visualizer Component Props
@@ -98,6 +99,9 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
     
     // Animation interval reference for cleanup
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    
+    // Canvas reference for GIF export
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     // Get algorithm metadata for display purposes
     const algorithm = algorithmId ? getAlgorithmById(algorithmId) : null;
@@ -353,7 +357,7 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                 </div>
                 
                 {/* Legend for Algorithm-Specific Colors */}
-                {(merging || pivot.length > 0 || searching.length > 0) && (
+                {(merging || pivot.length > 0 || searching.length > 0 || found.length > 0) && (
                     <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
                         {merging && (
                             <>
@@ -365,6 +369,20 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                                 Comparing
                                 <span className="inline-block w-3 h-3 bg-green-400 rounded ml-3 mr-1"></span>
                                 Merged
+                            </>
+                        )}
+                        {searching.length > 0 && (
+                            <>
+                                <span className="inline-block w-3 h-3 bg-blue-400 rounded mr-1"></span>
+                                Search range
+                                <span className="inline-block w-3 h-3 bg-yellow-400 rounded ml-3 mr-1"></span>
+                                Comparing
+                                {found.length > 0 && (
+                                    <>
+                                        <span className="inline-block w-3 h-3 bg-green-500 rounded ml-3 mr-1"></span>
+                                        Found
+                                    </>
+                                )}
                             </>
                         )}
                         {pivot.length > 0 && (
@@ -413,13 +431,60 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
 
         const { nodes, edges } = currentStateData;
 
+        // Extract additional state information for display
+        const openSet = currentStateData.openSet || [];
+        const closedSet = currentStateData.closedSet || [];
+        const whiteNodes = currentStateData.whiteNodes || [];
+        const grayNodes = currentStateData.grayNodes || [];
+        const blackNodes = currentStateData.blackNodes || [];
+        const stack = currentStateData.stack || [];
+        const current = currentStateData.current;
+
         return (
             <div className="w-full h-full flex flex-col">
-                <div className="flex-1 flex items-center justify-center">
-                    <GraphRenderer nodes={nodes} edges={edges} width={600} height={400} />
+                <div className="flex-1">
+                    <GraphRenderer nodes={nodes} edges={edges} />
                 </div>
-                <div className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
-                    {currentState < states.length ? `Step ${currentState + 1} of ${states.length}` : 'Animation complete'}
+                
+                {/* Algorithm-specific information display */}
+                <div className="mt-4 space-y-2">
+                    <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+                        {currentState < states.length ? `Step ${currentState + 1} of ${states.length}` : 'Animation complete'}
+                    </div>
+                    
+                    {/* A* Algorithm specific info */}
+                    {algorithmId === 'a-star' && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 text-center space-x-4">
+                            <span>Open Set: {openSet.length}</span>
+                            <span>Closed Set: {closedSet.length}</span>
+                            {current && <span>Current: {current}</span>}
+                        </div>
+                    )}
+                    
+                    {/* Tricolor Algorithm specific info */}
+                    {algorithmId === 'tricolor-algorithm' && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 text-center space-x-4">
+                            <span className="inline-flex items-center">
+                                <span className="w-3 h-3 bg-gray-200 rounded-full mr-1"></span>
+                                White: {whiteNodes.length}
+                            </span>
+                            <span className="inline-flex items-center">
+                                <span className="w-3 h-3 bg-gray-500 rounded-full mr-1"></span>
+                                Gray: {grayNodes.length}
+                            </span>
+                            <span className="inline-flex items-center">
+                                <span className="w-3 h-3 bg-gray-800 rounded-full mr-1"></span>
+                                Black: {blackNodes.length}
+                            </span>
+                        </div>
+                    )}
+                    
+                    {/* BFS/DFS specific info */}
+                    {(algorithmId === 'breadth-first-search' || algorithmId === 'depth-first-search') && stack.length > 0 && (
+                        <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+                            Stack/Queue: [{stack.join(', ')}]
+                        </div>
+                    )}
                 </div>
             </div>
         );
@@ -525,6 +590,15 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
                             </svg>
                         </button>
                     </div>
+                    
+                    {/* GIF Export Controls */}
+                    <div className="flex items-center space-x-2">
+                        <GifExporter 
+                            states={states}
+                            algorithmId={algorithmId}
+                            canvasRef={canvasRef}
+                        />
+                    </div>
                 </div>
                 
                 {/* Speed Control - Full Width on Small Screens */}
@@ -546,10 +620,18 @@ export function Visualiser({ states, algorithmId }: VisualiserProps) {
             </div>
 
             {/* Visualization Display */}
-            <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg p-4">
+            <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg p-4 relative">
                 {visualizationType === 'bars' ? renderBars() : 
                  visualizationType === 'graph' ? renderGraph() : 
                  renderHashTable()}
+                
+                {/* Hidden canvas for GIF export */}
+                <canvas
+                    ref={canvasRef}
+                    className="hidden"
+                    width={800}
+                    height={600}
+                />
             </div>
 
             {/* Algorithm Information */}

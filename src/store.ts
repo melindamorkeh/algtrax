@@ -99,11 +99,11 @@ export const useStore = create<Store>((set, get) => ({
         
         // Determine algorithm type and generate appropriate states
         // This routing logic determines what visualization type to use
-        if (['bubble-sort', 'insertion-sort', 'merge-sort', 'quick-sort', 'linear-search', 'hash-table-search'].includes(algorithmId)) {
+        if (['bubble-sort', 'insertion-sort', 'merge-sort', 'quick-sort', 'linear-search', 'binary-search', 'hash-table-search'].includes(algorithmId)) {
           // Sorting and array-based algorithms use bar chart visualization
           const defaultData = AlgorithmService.getDefaultSortingData();
           states = AlgorithmService.generateSortingStates(algorithmId, defaultData);
-        } else if (['breadth-first-search', 'depth-first-search', 'dijkstra', 'a-star'].includes(algorithmId)) {
+        } else if (['breadth-first-search', 'depth-first-search', 'tricolor-algorithm', 'dijkstra', 'a-star'].includes(algorithmId)) {
             // Graph algorithms use node/edge visualization
             const { nodes, edges } = AlgorithmService.getDefaultGraphData();
             states = AlgorithmService.generateGraphStates(algorithmId, nodes, edges, 'A', 'F');
